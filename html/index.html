@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>在线考试</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-3.3.4.css">
+    <!--<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">-->
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
+    <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.js"></script>
+    <script type="text/javascript" src="../js/Questions.js"></script>
+</head>
+<body>
+    <div>
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="content">
+                <!--上方按钮-->
+                <div class="row" style="margin: 20px 0 0">
+                    <div class="btn-group">
+                        <button class="btn btn-default" type="button" onclick="history.go(-1);">返回上一个页面</button>
+                        <button class="btn btn-default" type="button" onclick="location.reload();">刷新</button>
+                    </div>
+                </div>
+                <!--下面试卷显示-->
+                <div class="show">
+                    <div style="width: 100%">
+                        <div style="width: 80%;margin: 0px auto;">
+                            <!--上方进度条显示-->
+                            <div class="title">
+                                <div class="middle-top">
+                                    <div class="middle-top-left pull-left" style="height: 100%;padding-left: 20px;background: #232C31;color: #cccccc;">
+                                        <!--进度条-->
+                                        <div class="text-center pull-left progress-left progress_show">
+                                            <div class="progress pull-left"  style="background: #609E53;width: 0px;height:18px;position:absolute;left: 0px;">
+                                            </div>
+                                            <div class="pro-text" style="left: 0px;color: #609E53;position: absolute;top: 0px;width:100%;">
+                                                已完成<span class="progres"></span>
+                                            </div>
+                                        </div>
+                                        <!--答题数量-->
+                                        <div class="pull-left" style="width: 135px;line-height: 20px;height: 20px;margin: 15px;font-size: 15px">
+                                            当前第<span class="questioned"></span>题/共<span class="question_sum"></span>题
+                                        </div>
+                                    </div>
+                                    <div class="middle-top-right text-center pull-left"
+                                         style="width:160px; height: 100%;border-left: 1px solid red;position: absolute;right: 0px;">
+                                        <div class="stop pull-left" style="width: 50px; height: 100%;padding: 10px;">
+                                            <a href="javascript:void(0);" class="text-center" style="color: #FE6547;">
+                                                <div class="time-stop glyphicon glyphicon-pause" title="暂停"
+                                                    style="width:30px;height: 30px;line-height:30px; border-radius:15px;border: 1px solid #FE6547;">
+                                                </div>
+                                                <div class="time-start glyphicon glyphicon-play" title="开始"
+                                                    style="width:30px;height: 30px;line-height:30px;border-radius:15px;border: 1px solid #FE6547;display:none;">
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="pull-left"  style="width: 100px; height: 100%;padding: 10px 0px 10px 0px;">
+                                            <div class="time" style="width:100px;height: 30px;line-height:30px; border-radius:15px;font-size:20px;color:#FFF;"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="width: 100%;height: 50px;font-size:15px;color: #000;line-height: 50px;padding-left: 20px;">
+                                    <div style="color:#FFF;background: red;width: 22px;height: 22px;border-radius:11px;line-height:22px;font-size:13px; text-align: center;"
+                                         class="glyphicon glyphicon-map-marker"></div>
+                                    [单选题]
+                                </div>
+                            </div>
+                            <!--试题显示-->
+                            <div style="width: 100%;height:auto;display: inline-block;border: 1px solid #CCC;border-bottom:1px dashed #CCC;background:#FFF;">
+                                <div style="width: 100%;height: 90%;padding:20px 20px 0px 20px;">
+                                    <!--试题区域-->
+                                    <ul class="list-unstyled question" id="" name="">
+                                        <li class="question_title"></li>
+                                    </ul>
+                                    <!--考题的操作区域-->
+                                    <div class="operation" style="margin-top: 20px;">
+                                        <div class="text-left"
+                                             style="margin-left:20px;font-size: 15px;float: left;line-height: 30px;">
+                                            <div id="unHeart" style="color:#999999;"> <span class="glyphicon glyphicon-heart-empty"></span> <span>收藏本题</span> </div>
+                                            <div id="heart" style="color:#C40000;display: none;"> <span class="glyphicon glyphicon-heart"></span> <span>已收藏</span> </div>
+                                        </div>
+                                        <div class="text-right" style="margin-right: 20px;">
+                                            <div class="form-group" style="color: #FFF;">
+                                                <button class="btn btn-success" id="submitQuestions">提交试卷</button>
+                                                <button class="btn btn-info" id="nextQuestion">下一题</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--展示答题卡-->
+                            <div style="width: 100%;height:auto;display: inline-block;border: 1px solid #CCC;border-top:none;background:#FFF;">
+                                <div style="width: 100%;padding:20px;">
+                                    <div class="panel-default">
+                                        <div class="panel-heading" class="panel-heading" id="closeCard" style="color: #DCE4EC;font-size: 15px;display: none;background: none;">
+                                            <span>收起答题卡</span> <span class="glyphicon glyphicon-chevron-up"></span>
+                                        </div>
+                                        <div class="panel-heading" id="openCard" style="font-size: 15px;background: none;">
+                                            <span>展开答题卡</span> <span class="glyphicon glyphicon-chevron-down"></span>
+                                        </div>
+                                        <div id="answerCard" style="display: none;">
+                                            <div class="panel-body form-horizontal" style="padding: 0px;">
+                                                <ul class="list-unstyled">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <script type="text/javascript">
+        var HH= 0,MM= 0,SS=0;
+        var timeState=true;//时间状态,默认为 true,开启时间
+        var questions=QuestionJosn;
+        var questioned=0;
+        var checkQues=[];//已经答题的集合
+        var activeQuestion=0;//当前操作的答题号
+        var itemList=["A","B","C","D","E","F"];
+
+        $(function(){
+            $(".time").text("00:00:00");//初始化时间
+            var str='';
+            $(".middle-top-left").width($(".middle-top").width()-$(".middle-top-right").width());
+            $(".progress-left").width($(".middle-top-left").width()-200);
+            progress();
+            answerCard();
+            showQuestion(0);
+
+            //答题卡的切换
+            $("#openCard").click(function(){
+                $("#closeCard").show();
+                $(this).hide();
+                $("#answerCard").slideDown();
+            });
+            $("#closeCard").click(function(){
+                $(this).hide();
+                $("#openCard").show();
+                $("#answerCard").slideUp();
+            });
+
+            //开始和结束时间
+            $(".time-stop").click(function(){
+                timeState=false;
+                $(this).hide();
+                $(".time-start").show();
+            });
+            $(".time-start").click(function(){
+                timeState=true;
+                $(this).hide();
+                $(".time-stop").show();
+            });
+
+            //收藏按钮的切换
+            $("#unHeart").click(function(){
+                $(this).hide();
+                $("#heart").show();
+            });
+            $("#heart").click(function(){
+                $(this).hide();
+                $("#unHeart").show();
+            });
+
+            //提交试题
+            $("#submitQuestions").click(function(){
+                alert("已作答:"+($(".clickQue").length)+"道题,还有"+(questions.length-($(".clickQue").length))+"道题未做完");
+            });
+            //下一题
+            $("#nextQuestion").click(function(){
+                if((activeQuestion+1)!=questions.length) showQuestion(activeQuestion+1);
+                showQuestion(activeQuestion);
+            });
+        });
+        //实现倒计时
+        var timer=setInterval(function(){
+            if(timeState){
+                if(HH==24)HH=0;
+                str="";
+                if(++SS==60){
+                    if(++MM==60){
+                        HH++;
+                        MM=0;
+                    }
+                    SS=0;
+                }
+                str+=HH<10?"0"+HH:HH;
+                str+=":";
+                str+=MM<10?"0"+MM:MM;
+                str+=":";
+                str+=SS<10?"0"+SS:SS;
+                $(".time").text(str);
+            }else{
+                $(".time").text(str);
+            }
+        },1000);
+
+        //设置进度条
+        function progress(){
+            var prog=($(".active_question_id").length+1)/questions.length;
+            var pro=$(".progress").parent().width()*prog;
+            $(".progres").text((prog*100).toString().substr(0,5)+"%");
+            $(".progress").animate({
+                width:pro,
+                opacity:0.5
+            },1000);
+        }
+        //答题卡
+        function answerCard(){
+            $(".question_sum").text(questions.length);
+            for(var i=0;i<questions.length;i++){
+                var questionId="<li id='ques"+i+"' onclick='saveQuestionState("+i+")' class='questionId'>"+(i+1)+"</li>";
+                $("#answerCard ul").append(questionId);
+            }
+        }
+        //展示试卷信息
+        function showQuestion(id){
+            $(".questioned").text(id+1);
+            questioned=(id+1)/questions.length;
+            if(activeQuestion!=undefined){
+                $("#ques"+activeQuestion).removeClass("question_id").addClass("active_question_id");//类active_question_id表示查看过的题目
+            }
+            activeQuestion=id;//当前题号，从0开始
+            $(".question").find(".question_info").remove();
+            var question=questions[id];
+            $(".question_title").html("<strong>第"+(id+1)+"题,&nbsp;</strong>"+question.questionTitle);
+            var items=question.questionItems.split(";");
+            var item="";
+            for(var i=0;i<items.length;i++){
+                item="<li class='question_info' onclick='clickTrim(this)' id='item"+i+"'>" +
+                        "<input type='radio' name='item' value='"+itemList[i]+"'>"+itemList[i]+"."+items[i]+"</li>";
+                $(".question").append(item);
+            }
+            $(".question").attr("id","question"+id);
+            $("#ques"+id).removeClass("active_question_id").addClass("question_id");
+            //已经做过该题，显示该题的题目的时候显示选中的答案
+            for(var i=0;i<checkQues.length;i++){
+                if(checkQues[i].id==id){
+                    $("#"+checkQues[i].item).find("input").prop("checked","checked");
+                    $("#"+checkQues[i].item).addClass("clickTrim");
+                    $("#ques"+activeQuestion).removeClass("question_id").addClass("clickQue");
+                }
+            }
+            progress();
+        }
+        //保存试题状态(是否已答，是否查看过)
+        function saveQuestionState(clickId){
+            showQuestion(clickId);
+        }
+        //选中考题
+        var Question;
+        function clickTrim(source){
+            var id=source.id;
+            console.log(id);
+            $("#"+id).find("input").prop("checked","checked");
+            $("#"+id).addClass("clickTrim");//加上类clickTrim表示选中状态
+            $("#ques"+activeQuestion).removeClass("question_id").addClass("clickQue");//类clickQue表示该题已答，类question_id表示当前选中的题目
+            var ques=0;
+            for(var i=0;i<checkQues.length;i++){
+                //已经答过的题修改答案，checkQues[i].id题号不修改
+                if(checkQues[i].id==activeQuestion && checkQues[i].item!=id){
+                    ques=checkQues[i].id;
+                    checkQues[i].item=id;
+                    checkQues[i].answer=$("#"+id).find("input[name='item']:checked").val();//获取当前试题的选项值
+                }
+            }
+            //第一次答题或者是下一题答题
+            if(checkQues.length==0 || Question!=activeQuestion && activeQuestion!=ques){
+                var check={};
+                check.id=activeQuestion;
+                check.item=id;
+                check.answer=$("#"+id).find("input[name='item']:checked").val();
+                checkQues.push(check);
+            }
+            //对该题之前选中的选项进行删除
+            $(".question_info").each(function(){
+                var otherId=$(this).attr("id");
+                if(otherId!=id){
+                    $("#"+otherId).find("input").prop("checked",false);
+                    $("#"+otherId).removeClass("clickTrim");
+                }
+            });
+            Question=activeQuestion;
+        }
+    </script>
+</body>
+</html>
